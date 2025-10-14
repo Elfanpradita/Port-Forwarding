@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Forwarding Dashboard</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Tambah Aturan Forwarding Baru</h4>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('add_rule') }}" method="POST" class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="listen_port" class="form-label">Listen Port (di Host)</label>
+                        <input type="number" class="form-control" name="listen_port" placeholder="cth: 9000" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="target_ip" class="form-label">Target IP</label>
+                        <input type="text" class="form-control" name="target_ip" placeholder="cth: 192.168.1.10" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="target_port" class="form-label">Target Port</label>
+                        <input type="number" class="form-control" name="target_port" placeholder="cth: 3389" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">Tambah</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h4>Aturan Forwarding Aktif</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Listen Port (Host)</th>
+                            <th>Tujuan</th>
+                            <th>PID</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rule in rules %}
+                        <tr>
+                            <td><strong>{{ rule.listen_port }}</strong></td>
+                            <td>{{ rule.target_ip }}:{{ rule.target_port }}</td>
+                            <td>{{ rule.pid }}</td>
+                            <td>
+                                <form action="{{ url_for('delete_rule', rule_id=rule.id) }}" method="POST" onsubmit="return confirm('Anda yakin ingin menghapus aturan ini?');">
+                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center">Belum ada aturan yang dibuat.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

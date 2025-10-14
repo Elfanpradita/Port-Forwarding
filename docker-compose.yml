@@ -1,0 +1,16 @@
+services:
+  forwarding_dashboard:
+    build: ./flask_app
+    container_name: forwarding_dashboard
+    restart: unless-stopped
+    
+    env_file: .env
+    
+    network_mode: "host"
+    privileged: true
+    
+    volumes:
+      - ./flask_app/data:/app/data
+      
+    environment:
+      - SECRET_KEY=kunci-rahasia-anda-yang-sangat-aman

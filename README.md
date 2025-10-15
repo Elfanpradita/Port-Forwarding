@@ -65,9 +65,9 @@ b. **Isi file `.env`** tersebut dengan informasi koneksi ke database MySQL Anda:
 # /proyek-forwarding-docker/.env
 
 # Kredensial untuk koneksi ke Database MySQL
-DB_HOST=192.168.0.80
+DB_HOST=192.168.0.xx
 DB_USER=root
-DB_PASSWORD=p455w0rd
+DB_PASSWORD=xxxxxxxx
 DB_NAME=forwarding_db
 ```
 

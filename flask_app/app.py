@@ -18,6 +18,8 @@ db_user = os.environ.get('DB_USER')
 db_password = os.environ.get('DB_PASSWORD')
 db_host = os.environ.get('DB_HOST')
 db_name = os.environ.get('DB_NAME')
+default_user = os.getenv('DEFAULT_ADMIN_USER', 'admin')
+default_pass = os.getenv('DEFAULT_ADMIN_PASS', 'admin')
 
 # BUAT KONEKSI STRING UNTUK MySQL
 # Format: mysql+pymysql://user:password@host/dbname
@@ -140,9 +142,9 @@ def initialize_app(app):
     with app.app_context():
         db.create_all()
         # Buat user default jika belum ada
-        if not User.query.filter_by(username='admin').first():
-            hashed_password = bcrypt.generate_password_hash('admin').decode('utf-8')
-            admin_user = User(username='admin', password=hashed_password)
+        if not User.query.filter_by(username=default_user).first():
+            hashed_password = bcrypt.generate_password_hash(default_pass).decode('utf-8')
+            admin_user = User(username=default_user, password=hashed_password)
             db.session.add(admin_user)
             db.session.commit()
             print("User 'admin' dengan password 'admin' telah dibuat.")

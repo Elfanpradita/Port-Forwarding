@@ -14,3 +14,12 @@ services:
       
     environment:
       - SECRET_KEY=kunci-rahasia-anda-yang-sangat-aman
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TOKEN}
+    networks:
+      - default
+    env_file:
+      - .env
